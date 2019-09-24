@@ -60,6 +60,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
             let btn = UIButton(type: .detailDisclosure)
             annotationView?.rightCalloutAccessoryView = btn
             
+            
+            
             let img = UIImageView(image: UIImage(named: "사진"))
             img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             annotationView?.leftCalloutAccessoryView = img
@@ -70,6 +72,12 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         return annotationView
     }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let alert = UIAlertController(title: view.annotation!.title!, message: view.annotation!.subtitle!, preferredStyle: .alert)
+        present(alert, animated: false, completion: nil)
+    }
+
     
     func createPoint(la : CLLocationDegrees, lo : CLLocationDegrees, title:String, subtitle:String) -> MKPointAnnotation {
         let center = CLLocationCoordinate2D(latitude: la, longitude: lo)
