@@ -9,21 +9,18 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
-    
+    var points = [MKPointAnnotation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        mapView.delegate = self
         
         // 중심점 잡기
         let center = CLLocationCoordinate2D(latitude: 35.165775, longitude: 129.072537)
-        let center2 = CLLocationCoordinate2D(latitude: 35.164236,
-            longitude: 129.064941)
-        let center3 = CLLocationCoordinate2D(latitude: 35.167629, longitude: 129.070595)
         // 범위 잡기
 //        let span = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
 //        let region = MKCoordinateRegion(center: center, span: span)
@@ -31,26 +28,57 @@ class ViewController: UIViewController {
         let region = MKCoordinateRegion(center: center, latitudinalMeters: 1000, longitudinalMeters: 1000)
         mapView.setRegion(region, animated: true)
         
-        let point = MKPointAnnotation()
-        point.coordinate = center
-        point.title = "test"
-        point.subtitle = "t"
+
+        let point = createPoint(la: 35.165775, lo: 129.072537, title: "학교" , subtitle: "학교")
         mapView.addAnnotation(point)
         
-        let point2 = MKPointAnnotation()
-        point2.coordinate = center2
-        point2.title = "송상현광장"
-        point2.subtitle = "공원"
+        let point2 = createPoint(la: 35.164236, lo: 129.064941, title: "송상현광장" , subtitle: "공원")
         mapView.addAnnotation(point2)
         
-        let point3 = MKPointAnnotation()
-        point3.coordinate = center3
-        point3.title = "번개반점"
-        point3.subtitle = "중국 음식점"
+        let point3 = createPoint(la: 35.167629, lo: 129.070595, title: "번개반점" , subtitle: "중국 음식점")
         mapView.addAnnotation(point3)
         
-        mapView.showAnnotations([point, point2, point3], animated: true)
+        let point4 = createPoint(la: 35.071750, lo: 129.057410, title: "영도 목장원" , subtitle: "식당")
+        mapView.addAnnotation(point4)
         
+        
+        mapView.showAnnotations(points, animated: true)
+        mapView.selectAnnotation(point2, animated: true)
+        
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "RE"
+        
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        if annotationView == nil {
+            annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+            annotationView!.canShowCallout = true
+            annotationView?.pinTintColor = UIColor.green
+            annotationView?.animatesDrop = true
+            
+            let btn = UIButton(type: .detailDisclosure)
+            annotationView?.rightCalloutAccessoryView = btn
+            
+            let img = UIImageView(image: UIImage(named: "이미지.jpeg"))
+            img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            annotationView?.leftCalloutAccessoryView = img
+        }
+        else {
+            annotationView?.annotation = annotation
+        }
+        
+        return annotationView
+    }
+    
+    func createPoint(la : CLLocationDegrees, lo : CLLocationDegrees, title:String, subtitle:String) -> MKPointAnnotation {
+        let center = CLLocationCoordinate2D(latitude: la, longitude: lo)
+        let point = MKPointAnnotation()
+        point.coordinate = center
+        point.title = title
+        point.subtitle = subtitle
+        points.append(point)
+        return point
     }
 
     @IBAction func standard(_ sender: Any) {
