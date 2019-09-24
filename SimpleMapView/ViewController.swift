@@ -60,7 +60,7 @@ class ViewController: UIViewController, MKMapViewDelegate {
             let btn = UIButton(type: .detailDisclosure)
             annotationView?.rightCalloutAccessoryView = btn
             
-            let img = UIImageView(image: UIImage(named: "이미지.jpeg"))
+            let img = UIImageView(image: UIImage(named: "사진"))
             img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             annotationView?.leftCalloutAccessoryView = img
         }
