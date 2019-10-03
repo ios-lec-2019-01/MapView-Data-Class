@@ -29,18 +29,17 @@ class ViewController: UIViewController, MKMapViewDelegate {
         mapView.setRegion(region, animated: true)
         
 
-        let point = createPoint(la: 35.165775, lo: 129.072537, title: "학교" , subtitle: "학교")
+        let point = PinData(la: 35.165775, lo: 129.072537, title: "학교", subtitle: "학교")
         mapView.addAnnotation(point)
         
-        let point2 = createPoint(la: 35.164236, lo: 129.064941, title: "송상현광장" , subtitle: "공원")
+        let point2 = PinData(la: 35.164236, lo: 129.064941, title: "송상현광장", subtitle: "공원")
         mapView.addAnnotation(point2)
         
-        let point3 = createPoint(la: 35.167629, lo: 129.070595, title: "번개반점" , subtitle: "중국 음식점")
+        let point3 = PinData(la: 35.167629, lo: 129.070595, title: "번개반점", subtitle: "중국 음식점")
         mapView.addAnnotation(point3)
         
-        let point4 = createPoint(la: 35.071750, lo: 129.057410, title: "영도 목장원" , subtitle: "식당")
+        let point4 = PinData(la: 35.071750, lo: 129.057410, title: "영도 목장원", subtitle: "식당")
         mapView.addAnnotation(point4)
-        
         
         mapView.showAnnotations(points, animated: true)
         mapView.selectAnnotation(point2, animated: true)
@@ -54,14 +53,19 @@ class ViewController: UIViewController, MKMapViewDelegate {
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             annotationView!.canShowCallout = true
+            
+            if annotation.title == "학교" {
             annotationView?.pinTintColor = UIColor.green
+            } else if annotation.title == "송상현광장"{
+                annotationView?.pinTintColor = UIColor.blue
+            } else if annotation.title == "번개반점"{
+                annotationView?.pinTintColor = UIColor.brown
+            } else {
+            }
             annotationView?.animatesDrop = true
             
             let btn = UIButton(type: .detailDisclosure)
             annotationView?.rightCalloutAccessoryView = btn
-            
-            
-            
             let img = UIImageView(image: UIImage(named: "사진"))
             img.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             annotationView?.leftCalloutAccessoryView = img
@@ -69,24 +73,15 @@ class ViewController: UIViewController, MKMapViewDelegate {
         else {
             annotationView?.annotation = annotation
         }
-        
         return annotationView
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         let alert = UIAlertController(title: view.annotation!.title!, message: view.annotation!.subtitle!, preferredStyle: .alert)
+        
+        let cancelBtn = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
+        alert.addAction(cancelBtn)
         present(alert, animated: false, completion: nil)
-    }
-
-    
-    func createPoint(la : CLLocationDegrees, lo : CLLocationDegrees, title:String, subtitle:String) -> MKPointAnnotation {
-        let center = CLLocationCoordinate2D(latitude: la, longitude: lo)
-        let point = MKPointAnnotation()
-        point.coordinate = center
-        point.title = title
-        point.subtitle = subtitle
-        points.append(point)
-        return point
     }
 
     @IBAction func standard(_ sender: Any) {
@@ -96,14 +91,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
     
     @IBAction func satelite(_ sender: Any) {
         mapView.mapType = MKMapType.satellite
-       
     }
     
     @IBAction func hybrid(_ sender: Any) {
         mapView.mapType = MKMapType.hybrid
-        
     }
-    
     
 }
 
